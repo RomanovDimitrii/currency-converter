@@ -5,14 +5,16 @@
   "type": "commonjs",
   "scripts": {
     "dev": "vite",
+    "build": "vue-tsc -b tsconfig.json && vite build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "build": "vue-tsc -b tsconfig.json && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:watch": "vitest --watch"
   },
   "dependencies": {
+    "@types/vue": "^2.0.0",
+    "@vue/runtime-core": "^3.4.38",
     "axios": "^1.7.5",
     "vue-select": "^4.0.0-beta.6"
   },
@@ -26,6 +28,7 @@
     "@vue/test-utils": "^2.4.6",
     "gh-pages": "^6.1.1",
     "jsdom": "^25.0.0",
+    "type-fest": "^4.25.0",
     "typescript": "^5.5.3",
     "vite": "^5.4.1",
     "vitest": "^2.0.5",

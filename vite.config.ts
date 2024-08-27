@@ -4,6 +4,7 @@ import { configDefaults } from 'vitest/config';
 
 export default defineConfig({
   plugins: [vue()],
+  base: '/currency-converter/',
   resolve: {
     alias: {
       '@': '/src'

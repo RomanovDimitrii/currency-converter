@@ -7,7 +7,7 @@
           :aria-labelledby="fromCurrencyLabelId"
           v-model="fromCurrency"
           :options="currencies"
-          :reduce="currency => currency"
+          :reduce="(currency: string) => currency"
           placeholder="Выберите валюту"
           class="currency-converter__select"
         ></v-select>
@@ -23,7 +23,7 @@
           :aria-labelledby="toCurrencyLabelId"
           v-model="toCurrency"
           :options="currencies"
-          :reduce="currency => currency"
+          :reduce="(currency: string) => currency"
           placeholder="Выберите валюту"
           class="currency-converter__select"
         ></v-select>
@@ -47,12 +47,17 @@
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import { ref, watch, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
+
+interface ExchangeRateResponse {
+  rates: Record<string, number>;
+  base: string;
+  date: string;
+}
 
 export default {
   name: 'CurrencyConverter',
@@ -61,7 +66,7 @@ export default {
     const amount = ref<number>(0);
     const fromCurrency = ref<string>('USD');
     const toCurrency = ref<string>('RUB');
-    const result = ref<number>(0);
+    const result = ref<string>('0');
     const currencies = ref<string[]>([
       'USD',
       'EUR',
@@ -81,7 +86,7 @@ export default {
     const convertCurrency = async () => {
       if (amount.value === 0) return;
       try {
-        const response = await axios.get<{ rates: { [key: string]: number } }>(
+        const response = await axios.get<ExchangeRateResponse>(
           `https://api.exchangerate-api.com/v4/latest/${fromCurrency.value}`
         );
 
@@ -103,7 +108,7 @@ export default {
       fromCurrency.value = toCurrency.value;
       toCurrency.value = temp;
 
-      // await nextTick(); // Ждем обновления DOM и состояния
+      await nextTick(); // Ждем обновления DOM и состояния
 
       // Вызов пересчета после смены валют
       await convertCurrency();
@@ -138,7 +143,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 .currency-converter {
   max-width: 400px;
